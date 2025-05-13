@@ -12,10 +12,10 @@ spec:
       name: imageupdateautomations.image.toolkit.fluxcd.io
   inputs:
     - namespace: "apps"
-      repository: "https://github.com/controlplaneio-fluxcd/d2-apps.git"
+      repository: "https://github.com/stealthybox/flux-d2-ai-apps.git"
       pushBranch: "image-updates"
     - namespace: "infra"
-      repository: "https://github.com/controlplaneio-fluxcd/d2-infra.git"
+      repository: "https://github.com/stealthybox/flux-d2-ai-infra.git"
       pushBranch: "image-updates"
   resources:
     - apiVersion: v1

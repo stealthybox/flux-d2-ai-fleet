@@ -5,9 +5,9 @@
 > [ControlPlane Enterprise for Flux CD](https://fluxcd.control-plane.io/).
 >
 > The `d2` reference architecture comprised of
-> [d2-fleet](https://github.com/controlplaneio-fluxcd/d2-fleet),
-> [d2-infra](https://github.com/controlplaneio-fluxcd/d2-infra) and
-> [d2-apps](https://github.com/controlplaneio-fluxcd/d2-apps)
+> [d2-fleet](https://github.com/stealthybox/flux-d2-ai-fleet),
+> [d2-infra](https://github.com/stealthybox/flux-d2-ai-infra) and
+> [d2-apps](https://github.com/stealthybox/flux-d2-ai-apps)
 > is a set of best practices and production-ready examples for using Flux Operator
 > and OCI Artifacts to manage the continuous delivery of Kubernetes infrastructure and
 > applications on multi-cluster multi-tenant environments.
@@ -23,8 +23,8 @@ The platform team that manages this repository must have **admin** rights to the
 and **cluster admin** rights to all clusters in the fleet to be able to perform the following tasks:
 
 - Bootstrap Flux Operator with multi-tenancy restrictions on the fleet of clusters.
-- Configure the delivery of platform components (defined in [d2-infra repository](https://github.com/controlplaneio-fluxcd/d2-infra)).
-- Configure the delivery of applications (defined in [d2-apps repository](https://github.com/controlplaneio-fluxcd/d2-apps)).
+- Configure the delivery of platform components (defined in [d2-infra repository](https://github.com/stealthybox/flux-d2-ai-infra)).
+- Configure the delivery of applications (defined in [d2-apps repository](https://github.com/stealthybox/flux-d2-ai-apps)).
 
 ## OCI Artifacts
 
@@ -39,7 +39,7 @@ GitHub workflow used to publish the artifact.
 
 ### Fleet Artifacts
 
-The artifacts published to `oci://ghcr.io/controlplaneio-fluxcd/d2-fleet` are tagged as:
+The artifacts published to `oci://ghcr.io/stealthybox/flux-d2-ai-fleet` are tagged as:
 
 - `main-<commit-short-sha>` for the main branch commits.
 - `latest` points to the latest artifact tagged as `main-<commit-short-sha>`.
@@ -47,7 +47,7 @@ The artifacts published to `oci://ghcr.io/controlplaneio-fluxcd/d2-fleet` are ta
 - `latest-stable` points to the latest artifact tagged as `vX.Y.Z`.
 
 The Flux Operator running on the Kubernetes clusters in the fleet is configured with a
-[FluxInstance](https://github.com/controlplaneio-fluxcd/d2-fleet/blob/main/clusters/staging/flux-system/flux-instance.yaml)
+[FluxInstance](https://github.com/stealthybox/flux-d2-ai-fleet/blob/main/clusters/staging/flux-system/flux-instance.yaml)
 pointing to the OCI Artifact that defines the desired state of each cluster. The staging clusters
 are synced from the `latest` tag, while the production clusters are synced from the `latest-stable` tag.
 
@@ -55,10 +55,10 @@ are synced from the `latest` tag, while the production clusters are synced from 
 
 The infrastructure components from `d2-infra` and the applications from `d2-apps` follow the same pattern
 and are packaged as OCI Artifacts. The delivery of these components is performed by the Flux Operator
-using the [ResourceSet](https://github.com/controlplaneio-fluxcd/d2-fleet/tree/main/tenants) definitions.
+using the [ResourceSet](https://github.com/stealthybox/flux-d2-ai-fleet/tree/main/tenants) definitions.
 
 Each component is published to a dedicated OCI repository, for example, the `frontend` component
-is published to `oci://ghcr.io/controlplaneio-fluxcd/d2-apps/frontend` and is tagged as:
+is published to `oci://ghcr.io/stealthybox/flux-d2-ai-apps/frontend` and is tagged as:
 
 - `latest` for the main branch commits that modify the component.
 - `vX.Y.Z` for the release tags matching the Git tag format `<component>/vX.Y.Z`.
@@ -85,7 +85,7 @@ as `latest` to be deployed on the staging clusters, and the ones tagged as
 `latest-stable` to be deployed in production.
 
 Rolling back a component in production can be done by moving its `latest-stable` tag to a previous version,
-for example, `flux tag oci://ghcr.io/controlplaneio-fluxcd/d2-apps/frontend:v1.2.3 --tag latest-stable`.
+for example, `flux tag oci://ghcr.io/stealthybox/flux-d2-ai-apps/frontend:v1.2.3 --tag latest-stable`.
 
 The semver tags are considered immutable, while the `latest-stable` tag act as a pointer to the
 latest release of the component.
@@ -96,7 +96,7 @@ The bootstrap procedure is a one-time operation that installs the Flux Operator 
 configures the Flux controllers and the delivery of platform components and applications.
 
 After bootstrap, changes to the Flux configuration and version upgrades are done by
-modifying the [FluxInstance](https://github.com/controlplaneio-fluxcd/d2-fleet/blob/main/clusters/staging/flux-system/flux-instance.yaml)
+modifying the [FluxInstance](https://github.com/stealthybox/flux-d2-ai-fleet/blob/main/clusters/staging/flux-system/flux-instance.yaml)
 manifest and letting Flux reconcile the changes, there is no need to run bootstrap
 again nor connect to the cluster.
 
@@ -122,12 +122,12 @@ make bootstrap-staging
 ```
 
 Another option is to use Terraform or OpenTofu. An example of how to bootstrap a cluster with Terraform
-is available in the [terraform](https://github.com/controlplaneio-fluxcd/d2-fleet/tree/main/terraform) directory.
+is available in the [terraform](https://github.com/stealthybox/flux-d2-ai-fleet/tree/main/terraform) directory.
 
 ```shell
 terraform apply \
   -var oci_token="${GITHUB_TOKEN}" \
-  -var oci_url="oci://ghcr.io/controlplaneio-fluxcd/d2-fleet" \
+  -var oci_url="oci://ghcr.io/stealthybox/flux-d2-ai-fleet" \
   -var oci_tag="latest" \
   -var oci_path="clusters/staging"
 ```
@@ -136,19 +136,19 @@ The bootstrap performs the following steps:
 
 - Creates the `flux-system` namespace.
 - Installs the Flux Operator using Helm.
-- Creates a `FluxInstance` pointing to the `oci://ghcr.io/controlplaneio-fluxcd/d2-fleet` artifact.
+- Creates a `FluxInstance` pointing to the `oci://ghcr.io/stealthybox/flux-d2-ai-fleet` artifact.
 - Creates a Kubernetes image pull secret with the GitHub PAT.
 
 After bootstrap, the Flux Operator Helm release and the Flux instance configuration
 are being managed by Flux itself. Any changes to the Flux configuration from now on should be done
 by modifying the manifests in the
-[flux-system](https://github.com/controlplaneio-fluxcd/d2-fleet/tree/main/clusters/staging/flux-system)
+[flux-system](https://github.com/stealthybox/flux-d2-ai-fleet/tree/main/clusters/staging/flux-system)
 directory.
 
 ## Onboarding Platform Components
 
 The platform team is responsible for onboarding the platform components defined as Flux HelmReleases in the
-[d2-infra repository](https://github.com/controlplaneio-fluxcd/d2-infra) and set the dependencies
+[d2-infra repository](https://github.com/stealthybox/flux-d2-ai-infra) and set the dependencies
 between the components.
 
 Platform components are cluster add-ons such as CRDs and their respective controllers,

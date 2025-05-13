@@ -8,8 +8,8 @@
 SHELL = /usr/bin/env bash -o pipefail
 .SHELLFLAGS = -ec
 
-REPOSITORY ?= https://github.com/controlplaneio-fluxcd/d2-fleet
-REGISTRY ?= ghcr.io/controlplaneio-fluxcd/d2-fleet
+REPOSITORY ?= https://github.com/stealthybox/flux-d2-ai-fleet
+REGISTRY ?= ghcr.io/stealthybox/flux-d2-ai-fleet
 
 .PHONY: all
 all: push bootstrap-staging

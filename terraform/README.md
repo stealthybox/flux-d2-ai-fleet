@@ -17,7 +17,7 @@ set as the default context in the `~/.kube/config` file:
 ```shell
 terraform apply \
   -var oci_token="${GITHUB_TOKEN}" \
-  -var oci_url="oci://ghcr.io/controlplaneio-fluxcd/d2-fleet" \
+  -var oci_url="oci://ghcr.io/stealthybox/flux-d2-ai-fleet" \
   -var oci_tag="latest" \
   -var oci_path="clusters/staging"
 ```
@@ -58,6 +58,6 @@ spec:
     id: kustomization/flux-system
     path: clusters/staging
     ready: true
-    source: oci://ghcr.io/controlplaneio-fluxcd/d2-fleet
+    source: oci://ghcr.io/stealthybox/flux-d2-ai-fleet
     status: 'Applied revision: latest@sha256:b66a51......'
 ```
