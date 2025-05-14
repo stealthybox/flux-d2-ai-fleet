@@ -18,6 +18,10 @@ spec:
         sources: >-
           https://github.com/controlplaneio-fluxcd/
           oci://ghcr.io/controlplaneio-fluxcd/
+          https://github.com/stealthybox/flux-d2-ai-
+          oci://ghcr.io/stealthybox/flux-d2-ai-
+          https://github.com/stealthybox/ai-security-architecture/
+          oci://ghcr.io/stealthybox/ai-security-architecture/
           oci://ghcr.io/stefanprodan/charts/
           oci://registry-1.docker.io/bitnamicharts/
     - apiVersion: admissionregistration.k8s.io/v1
